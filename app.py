@@ -1,3 +1,4 @@
+import cgi
 import datetime
 import os
 from flask import Flask, render_template, request, redirect, url_for
@@ -54,6 +55,10 @@ def matchesTime(time):
 
 @app.route('/', methods=['GET'])
 def index():
+  form = cgi.FieldStorage()
+  username = form.getvalue('username_id')
+  password = form.getvalue('password_id')
+  session = form.getvalue('session_id')
   return render_template('index.html')
 
 
