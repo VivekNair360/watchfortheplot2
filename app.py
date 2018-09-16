@@ -55,16 +55,16 @@ def matchesTime(time):
 
 @app.route('/', methods=['GET'])
 def index():
-  form = cgi.FieldStorage()
-  username = form.getvalue('username_id')
-  password = form.getvalue('password_id')
-  session = form.getvalue('session_id')
+  
   return render_template('index.html')
 
 
 @app.route('/user', methods=['POST'])
 def user():
- 
+ form = cgi.FieldStorage()
+  username = form.getvalue('username_id')
+  password = form.getvalue('password_id')
+  session = form.getvalue('session_id')
   return redirect(url_for('index'))
 
 cred = credentials.Certificate("/Users/andrewriordan/Desktop/HelloWorld2018/GhostWriter/ghostwriter-d436e-firebase-adminsdk-cnyy5-f82bb21219.json")
