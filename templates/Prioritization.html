@@ -1,0 +1,13 @@
+<body class="w3-blue">
+    <div>
+        <div class="form">
+            <form class="login-form" action="/review" method=POST>
+                {% for future in futuresReviewed}
+                future[0]: <input type="input" name="input" placeholder="Enter 0 or 1">
+                {% endfor %}
+                <input type="submit" value="Submit" class="btn btn-primary btn-large btn-block">
+            </form>
+
+        </div>
+    </div>
+</body>

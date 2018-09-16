@@ -18,18 +18,26 @@ fbAuth = {
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-cnyy5%40ghostwriter-d436e.iam.gserviceaccount.com"
 }
+<<<<<<< HEAD
 class phpThread(object):
+=======
+
+""" class phpThread(object):
+>>>>>>> 16892b9f9c0cb50f80ef88f46a1acb9bfd4e6f13
   def __init__(self, phpId, username, currentPage):
     self.phpId = phpId
     self.username = username
-    self.currentPage = currentPage
+    self.currentPage = currentPage """
 class League(object):
+  #Initializes League object
   def __init__(self, players, topic, dates, futures, ID):
     self.players = players
     self.topic = topic
     self.futures = futures
     self.dates = dates
     self.ID = ID
+
+  #Stores Leagues as dictionary objects in the database for ease of storage.  
   def toDict(self):
     data = {
       "topic":self.topic,
@@ -37,6 +45,8 @@ class League(object):
       "futures":self.futures 
     }
     return data
+  
+  #String representation of League object (s) for troubleshooting.
   def __repr__(self):
     out = self.topic + "\n with players: \n"
     for p in self.players:
@@ -46,28 +56,44 @@ class League(object):
       out += ' ' + f.__repr__  
     return out
 class Future(object):
+
+  #Initializes the Future object
   def __init__(self, literal, owner):
     self.owner = owner
-    self.literal = literal  
+    self.literal = literal
+
+  #String representation of Future object (s) for troubleshooting.  
   def __repr__(self):
     return self.literal + self.owner[0:1]
-def addSession(phpID):
+""" def addSession(phpID):
   if phpID not in sessions:
     sessions.append(phpID)
-    writeToFile(bf, '/php '+phpID)
+    writeToFile(bf, '/php '+phpID) """
+#Writes to file object on python server for communication between front end and back end.
 def writeToFile(f, message):
   f.write('\n' + message)
+<<<<<<< HEAD
+=======
+
+#Went to Sign Up page, registered, a user name, and password.
+>>>>>>> 16892b9f9c0cb50f80ef88f46a1acb9bfd4e6f13
 def signUp(User):
+  db.collection('users').document(User).set({User, User})
   return User
 
+#Does validity check on time for draft night.
 def matchesTime(time):
     curTime = datetime.datetime.now().strftime("%x")
     if curTime == time:
         return True
     return False
 
+<<<<<<< HEAD
 #User side URL sites
 
+=======
+#Default page of front - end
+>>>>>>> 16892b9f9c0cb50f80ef88f46a1acb9bfd4e6f13
 @app.route('/', methods=['GET'])
 def idleHomeScreen():
   return render_template('idleHomeScreen.html')
@@ -155,6 +181,7 @@ users = []
       #all methods also take arg ()
 #     execute either addToPool("String"), requestTrade("[String myAssets, ...], [String yourAssets, ...]"), confirmTrade(boolean), markDegen([String markedFuture]), orderPref(["String Future", int pref]), newLeague(), setTime()
 
+#When admin logs into page corresponding with creating a league. 
 def originateLeague(usr, php, input):
   vals = input.split('|')
   topic = vals[2]
@@ -172,25 +199,54 @@ def originateLeague(usr, php, input):
   temp = db.collection('leagues').document(usr + "'s League!")
   temp.set(l.toDict())
 
+<<<<<<< HEAD
 def originateUser(username, password):
+=======
+#When user logs into page corresponding with setting a user account
+def originateUser(username, password, phpThread):
+>>>>>>> 16892b9f9c0cb50f80ef88f46a1acb9bfd4e6f13
   #userlist = db.collection('users').get()
   #for user in userlist:
    # print(user.to_dict())
   #db.collection('users').document('user').set({'Shaad':'Baptism'})
   if(userReference(username) == -1):
+<<<<<<< HEAD
     users.append({username, password})
   
+=======
+    db.collection('users').document(username).set({username, password})
+
+#Used to reference different users in the database  
+>>>>>>> 16892b9f9c0cb50f80ef88f46a1acb9bfd4e6f13
 def userReference(usrname):
   for user in db.collection('users').get():
     if(usrname == user.id):
       return user.to_dict()
   return -1
 
-
+#Method that takes a very long string containing predictions separated by a comma.
 def addToPool(usr, php, input, league):
-  return 4
+  for future in input.split(","):
+    league.futures.append(future)
+  
 
-def originateSession(php):
+#Method that allows a trade to be made.
+def addTrade(Future, preferences, drops):
+  for i in Future:
+    for j in preferences:
+      Future.append(preferences)
+  Future.remove(drops)
+  return 0
+
+def setPreferences(Future):
+  preferences = Future
+  return preferences
+
+def draft(Future):
+  Future = setPreferences(Future)
+  return 0
+
+""" def originateSession(php):
   if getSessionFromPHP(php) == -1:
     sessions.append(phpThread(php, "", 000))
 
@@ -198,10 +254,14 @@ def getSessionFromPHP(php):
   for session in sessions:
     if(session.phpId == php):
       return session
-  return -1
+  return -1 """
 #######start of alpha databases##########
+<<<<<<< HEAD
 '''
 l1 = League(["Andrew", "Shaad", "Vivek", "Drew"],"The Office", ['06-06-2066'],["Michael dies", "Michael marries holly", "Michael kills holly"], 0)
+=======
+""" l1 = League(["Andrew", "Shaad", "Vivek", "Drew"],"The Office", ['06-06-2066'],["Michael dies", "Michael marries holly", "Michael kills holly"], 0)
+>>>>>>> 16892b9f9c0cb50f80ef88f46a1acb9bfd4e6f13
 league1 = db.collection('leagues').document('League1')
 league1.set(l1.toDict())
 
@@ -213,10 +273,16 @@ leagues = db.collection('leagues').get()
 for league in leagues:
   print(league.id)
   print(league.to_dict())
+<<<<<<< HEAD
 #myThread = phpThread("0.0.0.0","AndrewRiordan",00)
 #originateUser("AndrewRiordan", "lmao",myThread)
+=======
+myThread = phpThread("0.0.0.0","AndrewRiordan",00)
+originateUser("AndrewRiordan", "lmao",myThread) """
+
+>>>>>>> 16892b9f9c0cb50f80ef88f46a1acb9bfd4e6f13
 
 '''
 if __name__ == '__main__':
   port = int(os.environ.get('PORT', 5000))
-  app.run(host='0.0.0.0', port=port, debug=True)
+app.run(host='0.0.0.0', port=port, debug=True)

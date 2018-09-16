@@ -27,9 +27,32 @@
     }
 </script> -->
 
+<<<<<<< HEAD
 {% for (future, i) in futures}
 <form action="/action_page.php">
     future: <input type="text" name="fname"><br>
     <input type="submit" value="Submit">
 </form>
 {% endfor %}
+=======
+<!--{% for (future, i) in futures}
+<form action="/action_page.py">
+    future: <input type="text" name="future"><br>
+</form>
+{% endfor %}
+-->
+
+<body class="w3-blue">
+    <div>
+        <div class="form">
+            <form class="login-form" action="/review" method=POST>
+                {% for future in futures}
+                future[0]: <input type="input" name="input" placeholder="Enter 0 or 1">
+                {% endfor %}
+                <input type="submit" value="Submit" class="btn btn-primary btn-large btn-block">
+            </form>
+
+        </div>
+    </div>
+</body>
+>>>>>>> 16892b9f9c0cb50f80ef88f46a1acb9bfd4e6f13
