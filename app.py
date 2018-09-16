@@ -1,4 +1,5 @@
-
+import cgi
+import datetime
 import os
 from flask import Flask, render_template, request, redirect, url_for
 import firebase_admin
@@ -45,17 +46,25 @@ def writeToFile(f, message):
 def signUp(User):
   return User
 
-
+def matchesTime(time):
+    curTime = datetime.datetime.now().strftime("%x")
+    if curTime == time:
+        return True
+    return False
 
 
 @app.route('/', methods=['GET'])
 def index():
+  
   return render_template('index.html')
 
 
 @app.route('/user', methods=['POST'])
 def user():
- 
+ form = cgi.FieldStorage()
+  username = form.getvalue('username_id')
+  password = form.getvalue('password_id')
+  session = form.getvalue('session_id')
   return redirect(url_for('index'))
 os.getcwd()
 cd = os.path.basename(os.getcwd()) + '/watchfortheplot3/static/ghostwriter-d436e-firebase-adminsdk-cnyy5-f82bb21219.json'
