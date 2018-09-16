@@ -1,4 +1,4 @@
-
+import datetime
 import os
 from flask import Flask, render_template, request, redirect, url_for
 import firebase_admin
@@ -45,7 +45,11 @@ def writeToFile(f, message):
 def signUp(User):
   return User
 
-
+def matchesTime(time):
+    curTime = datetime.datetime.now().strftime("%x")
+    if curTime == time:
+        return True
+    return False
 
 
 @app.route('/', methods=['GET'])
