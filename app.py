@@ -57,8 +57,9 @@ def index():
 def user():
  
   return redirect(url_for('index'))
-
-cred = credentials.Certificate("/Users/andrewriordan/Desktop/HelloWorld2018/GhostWriter/ghostwriter-d436e-firebase-adminsdk-cnyy5-f82bb21219.json")
+os.getcwd()
+cd = os.path.basename(os.getcwd()) + '/watchfortheplot3/static/ghostwriter-d436e-firebase-adminsdk-cnyy5-f82bb21219.json'
+cred = credentials.Certificate(cd)
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 sessions = []
