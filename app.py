@@ -18,7 +18,6 @@ fbAuth = {
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-cnyy5%40ghostwriter-d436e.iam.gserviceaccount.com"
 }
-
 class phpThread(object):
   def __init__(self, phpId, username, currentPage):
     self.phpId = phpId
@@ -58,8 +57,6 @@ def addSession(phpID):
     writeToFile(bf, '/php '+phpID)
 def writeToFile(f, message):
   f.write('\n' + message)
-
-
 def signUp(User):
   return User
 
@@ -69,20 +66,73 @@ def matchesTime(time):
         return True
     return False
 
+#User side URL sites
 
 @app.route('/', methods=['GET'])
-def index():
-  
-  return render_template('index.html')
+def idleHomeScreen():
+  return render_template('idleHomeScreen.html')
+
+@app.route('/wrongpassword', methods=['GET'])
+def wrongPassword():
+  return render_template('wrongpassword.html')
+
+@app.route('/signin', methods=['GET'])
+def signin():
+  print("currently in the def: signin")
+  return render_template('signin.html')
+
+@app.route('/signup', methods = ['GET'])
+def signupdisplay():
+  return render_template('signup.html')
+
+@app.route('/homePageForUser')
+def homePageForUser():
+  leaguesAdmin=[]
+  leaguesPlayer=[]
+  leaguesUnaf=[]
+  for league in db.collection('leagues').get():
+    if(league.to_dict()['players'][0] == currentuser):
+      leaguesAdmin.append(league)
+  return render_template('homepage2.html', username=currentuser, administrator=leaguesAdmin, member =leaguesPlayer, uninvolved =leaguesUnaf)
 
 
-@app.route('/user', methods=['POST'])
-def user():
-  form = cgi.FieldStorage()
-  username = form.getvalue('username_id')
-  password = form.getvalue('password_id')
-  session = form.getvalue('session_id')
-  return redirect(url_for('index'))
+#/url for data transfer
+'''
+@app.route('/registerAccount', methods =  ['POST'])
+def processSignup():
+  print("got to processsignup")
+  print(request.format('username'))
+  usinput = request.format['username']
+  psinput = request.format['password']
+  print(usinput)
+  print(psinput)
+  originateUser(usinput,psinput)
+  return redirect(url_for('homePageForUser'))
+  '''
+@app.route('/review', methods = ['POST'])
+def processReview():
+  print("processing degencases reviewed")
+  #removeCaseFromPool(request.form['input'])
+  return redirect(url_for('homePageForUser'))
+@app.route('/login', methods =['POST'])
+def login():
+  print('attempting to sign into account')
+  print(request.form['username'])
+  un = request.form['username']
+  print(un)
+  ps = request.form['password']
+  key = userReference(un)
+  if(key != -1):
+    if(key[1]==ps):
+      currentuser = un
+    else:
+      return redirect(url_for('wrongpassword'))
+  else:
+    originateUser(un[0], ps[0])
+    login()
+  return redirect(url_for('homePageForUser'))
+
+
 os.getcwd()
 cd = os.path.basename(os.getcwd()) + '/watchfortheplot3/static/ghostwriter-d436e-firebase-adminsdk-cnyy5-f82bb21219.json'
 cred = credentials.Certificate(fbAuth)
@@ -91,6 +141,8 @@ db = firestore.client()
 sessions = []
 bf = open('BF.txt', 'a')
 fb = open('FB.txt', 'a')
+currentuser = ""
+users = []
 
 #checking for user input and responding
 #while operational
@@ -120,17 +172,17 @@ def originateLeague(usr, php, input):
   temp = db.collection('leagues').document(usr + "'s League!")
   temp.set(l.toDict())
 
-def originateUser(username, password, phpThread):
+def originateUser(username, password):
   #userlist = db.collection('users').get()
   #for user in userlist:
    # print(user.to_dict())
-  db.collection('users').document('user').set({'Shaad':'Baptism'})
+  #db.collection('users').document('user').set({'Shaad':'Baptism'})
   if(userReference(username) == -1):
-    db.collection('users').document(username).set({username, password})
+    users.append({username, password})
   
 def userReference(usrname):
   for user in db.collection('users').get():
-    if(usrname == user.to_dict()['username']):
+    if(usrname == user.id):
       return user.to_dict()
   return -1
 
@@ -148,6 +200,7 @@ def getSessionFromPHP(php):
       return session
   return -1
 #######start of alpha databases##########
+'''
 l1 = League(["Andrew", "Shaad", "Vivek", "Drew"],"The Office", ['06-06-2066'],["Michael dies", "Michael marries holly", "Michael kills holly"], 0)
 league1 = db.collection('leagues').document('League1')
 league1.set(l1.toDict())
@@ -160,10 +213,10 @@ leagues = db.collection('leagues').get()
 for league in leagues:
   print(league.id)
   print(league.to_dict())
-myThread = phpThread("0.0.0.0","AndrewRiordan",00)
-originateUser("AndrewRiordan", "lmao",myThread)
+#myThread = phpThread("0.0.0.0","AndrewRiordan",00)
+#originateUser("AndrewRiordan", "lmao",myThread)
 
-
+'''
 if __name__ == '__main__':
   port = int(os.environ.get('PORT', 5000))
   app.run(host='0.0.0.0', port=port, debug=True)

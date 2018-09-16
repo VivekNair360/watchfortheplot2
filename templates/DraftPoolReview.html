@@ -1,0 +1,35 @@
+<!--{% for (prediction, i) in predictions}
+<label class="container">prediction
+    <input type="checkbox" value="box{{i}}" onclick="onClick(i)">
+    <span class="checkmark"></span>
+</label>
+{% endfor %}
+<button onclick="handleSubmit()">Submit</button>
+<script>
+    var results = [];
+    function onClick(i) {
+        const box = document.getElementById(`box${i}`);
+        const result = box.checked;
+        results[i] = result;
+    }
+
+    function handleSubmit() {
+        fetch('/handle', {
+            body: results,
+            method: 'POST'
+        })
+            .then(response => {
+
+            })
+            .catch(err => {
+
+            })
+    }
+</script> -->
+
+{% for (future, i) in futures}
+<form action="/action_page.php">
+    future: <input type="text" name="fname"><br>
+    <input type="submit" value="Submit">
+</form>
+{% endfor %}
