@@ -6,12 +6,31 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 app = Flask(__name__)
+fbAuth = {
+  "type": "service_account",
+  "project_id": "ghostwriter-d436e",
+  "private_key_id": "f82bb21219a23c98514222f064752c5f09252736",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCx88OddsJe9C0x\nRudb2SGJ6/9Orhpr05+SvCvWMHuTyx4uB9+udFEGsrE2utayr3ntFj2UTjGZR+PA\ndZRrNg+NE9wRGXChwztCyEQFedm/QoDgUjM8nY1UfOh28jJ+YsbWg6G66n83/Mzg\nbUZkYgHQ/LPZs14bog2Nm6n9WZzcqndGHuNBpdt72Qmk/Q1rX7YVkk9cAiNvVemc\n2NDYESRP5B1SYB2ttAThc3fIWj5z04KxbI0dJL0IlGZl7xK7HlbvO5pApMrAHyr8\n4GzEayEQ8v8ztuTolFxEtOx8x+v50QQ0etknXrWiO6O1kc0VyGjZXnQ+mjxgOK+Z\nlCwK90WpAgMBAAECggEABiULsSlDpvG5icUQAhzqSo/qnfXnFagWD4QN43SDH+RY\no3BEKgr8LUYIVoJ3HW5vwF8PO0rD7a4M0D1/JYCVYuK3q6N8Pym1pyWxK5s8iJ0s\nRBKykDpEghFaGZldYv3YLdoXwJOOVwmUrX84egjkVSoUr8TA0CV1YFlqskPg5cGy\nXFl+PGXobmxRxDgHpUEz1y5T+4WXDvsLFq8cuybXOhAamMyBNhX1r/e2qLndQYXt\n0XIqOUR2u/yBXek4gHc6IYtqgRTU2HwsfLc1UJOarrBm+qhTPXkclho4ObFYN2xi\nyDE5hUdZoZtZ7G19+zmM3RzzVYD77g1/LuecyxvLDQKBgQDkhUwT7vV11+B3N0iv\n1CEGE0cf+xvSpKCv9hiOrfBzL04Szhn0JM02OvDi01S01e4+6AmGgUn1VLj7fy4E\nf29+RsM6Xz8EiAt5OOtt7LCEyUn/l5/8xWUVFDhTG9O9Y1LObfZOoBDtvY0rr+t9\neDwiI7u6rp9Q4E0zo8g1geimrwKBgQDHWcis8hCSZnWqdo0geLfyJKoT6ASuKvcO\nPhaja+a6wPVxeH9m5PcfbecUDxgXizWLWhMVmvwmygCYcX2zNCJkR3X+T6fY2UbU\nZNqiVNp7cNPo+maOyst+73ZXGQ4195k5N4cs6vsY5SLQSK9tgyFAL7e3IqqNfUUN\nR37Ys8BvJwKBgHCD4S1/XoQjQnXwVm2cOJZRL5fjf5N7U1LQDM9TfSx5gitoJwc6\nh3/IDYrhGrffDWsTvHzpc4zDpkDOIc49IJxAIye+dby5b0zEZca93zvCEBk0gqVm\nW5rBVeo1rU92c/MH2VplHXCw/60e9QfWB2WXynrkN7UOe3SNk6okyHQpAoGADidM\nvSKulIZbwk+Kc4y+mp2JycIGWwtH4SX9W3r0tbuvcW/5s6d7+CpIZr8vmbRTh+JM\nSpNnZaWf5zLfltKTwoTkVrr3EslSYxAKCc52eJ8pHHhywZ6aVhfQUhzASoqawVo0\n6baBP2I9V4ZhlifiO3ln1MPMUiFbvradxer1Na8CgYBcUyIHWIlJe+qllURuYYqV\n9TXAA0QXWqSLMVOk0jKkpDd36JIit1EP1TWDe4bTugNEwIhFiuIaZVlkBrZL3QKF\nJlcztLeKRHLJFi5UkIUexW/EaflhVkc0nUN9lJ7PpgqFbS2xWqZGRTUNDiavb7dt\nxA4CZMTcX+v0XAWZC9PEVw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-cnyy5@ghostwriter-d436e.iam.gserviceaccount.com",
+  "client_id": "109821058527601237661",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-cnyy5%40ghostwriter-d436e.iam.gserviceaccount.com"
+}
 
+class phpThread(object):
+  def __init__(self, phpId, username, currentPage):
+    self.phpId = phpId
+    self.username = username
+    self.currentPage = currentPage
 class League(object):
-  def __init__(self, players, topic, futures):
+  def __init__(self, players, topic, dates, futures, ID):
     self.players = players
     self.topic = topic
     self.futures = futures
+    self.dates = dates
+    self.ID = ID
   def toDict(self):
     data = {
       "topic":self.topic,
@@ -37,11 +56,9 @@ def addSession(phpID):
   if phpID not in sessions:
     sessions.append(phpID)
     writeToFile(bf, '/php '+phpID)
-    
-
-  
 def writeToFile(f, message):
   f.write('\n' + message)
+
 
 def signUp(User):
   return User
@@ -61,22 +78,20 @@ def index():
 
 @app.route('/user', methods=['POST'])
 def user():
- form = cgi.FieldStorage()
+  form = cgi.FieldStorage()
   username = form.getvalue('username_id')
   password = form.getvalue('password_id')
   session = form.getvalue('session_id')
   return redirect(url_for('index'))
 os.getcwd()
 cd = os.path.basename(os.getcwd()) + '/watchfortheplot3/static/ghostwriter-d436e-firebase-adminsdk-cnyy5-f82bb21219.json'
-cred = credentials.Certificate(cd)
+cred = credentials.Certificate(fbAuth)
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 sessions = []
 bf = open('BF.txt', 'a')
 fb = open('FB.txt', 'a')
-if __name__ == '__main__':
-  port = int(os.environ.get('PORT', 5000))
-  app.run(host='0.0.0.0', port=port, debug=True)
+
 #checking for user input and responding
 #while operational
 # for users in connectedSockets:
@@ -88,23 +103,67 @@ if __name__ == '__main__':
       #all methods also take arg ()
 #     execute either addToPool("String"), requestTrade("[String myAssets, ...], [String yourAssets, ...]"), confirmTrade(boolean), markDegen([String markedFuture]), orderPref(["String Future", int pref]), newLeague(), setTime()
 
+def originateLeague(usr, php, input):
+  vals = input.split('|')
+  topic = vals[2]
+  dates = [] 
+  invitees = [usr]
+  for date in vals[3].split(","):
+    dates.append(date)
+  for invitee in vals[4].split(","):
+    invitees.append(invitee)
+  re = 0
+  for ns in db.collection('leagues').get():
+    re+=1
+  l = League(invitees, topic, dates, [], re)
+  #
+  temp = db.collection('leagues').document(usr + "'s League!")
+  temp.set(l.toDict())
+
+def originateUser(username, password, phpThread):
+  #userlist = db.collection('users').get()
+  #for user in userlist:
+   # print(user.to_dict())
+  db.collection('users').document('user').set({'Shaad':'Baptism'})
+  if(userReference(username) == -1):
+    db.collection('users').document(username).set({username, password})
+  
+def userReference(usrname):
+  for user in db.collection('users').get():
+    if(usrname == user.to_dict()['username']):
+      return user.to_dict()
+  return -1
+
+
+def addToPool(usr, php, input, league):
+  return 4
+
+def originateSession(php):
+  if getSessionFromPHP(php) == -1:
+    sessions.append(phpThread(php, "", 000))
+
+def getSessionFromPHP(php):
+  for session in sessions:
+    if(session.phpId == php):
+      return session
+  return -1
 #######start of alpha databases##########
-
-
-
-l1 = League(["Andrew", "Shaad", "Vivek", "Drew"],"The Office", ["Michael dies", "Michael marries holly", "Michael kills holly"])
+l1 = League(["Andrew", "Shaad", "Vivek", "Drew"],"The Office", ['06-06-2066'],["Michael dies", "Michael marries holly", "Michael kills holly"], 0)
 league1 = db.collection('leagues').document('League1')
 league1.set(l1.toDict())
 
-l2 = League(["David"], "Infinity War", ["David will win!"]) 
+l2 = League(["David"], "Infinity War",['06-06-2066'], ["David will win!"], 1) 
 league2 = db.collection('leagues').document('League2')
 league2.set(l2.toDict())
-
+originateLeague("TroubleShooterVivek", "0.0.0.0.0.0.0", "new |TroubleShooterVivek|troubleshooting_DUH!|06/06/2016,06/10/2017|Andrew, Shaad, Vivek")
 leagues = db.collection('leagues').get()
 for league in leagues:
   print(league.id)
   print(league.to_dict())
-###End of temp Database###
+myThread = phpThread("0.0.0.0","AndrewRiordan",00)
+originateUser("AndrewRiordan", "lmao",myThread)
 
 
-
+if __name__ == '__main__':
+  port = int(os.environ.get('PORT', 5000))
+  app.run(host='0.0.0.0', port=port, debug=True)
